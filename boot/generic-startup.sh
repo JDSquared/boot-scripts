@@ -45,9 +45,9 @@ fi
 fi
 
 # Copy the config directory to tmpfs
-if [ -d "/home/mdadmn/machinekit/configs/jd2" ]; then
+if [ -d "/home/mdadmn/machinekit/configs/by_machine/jd2" ]; then
 	echo "generic-board-startup: setting up config directory"
-	cp -r "/home/mdadmn/machinekit/configs/jd2" /tmp/
+	cp -r "/home/mdadmn/machinekit/configs/by_machine/jd2" /tmp/
 	# Create the symlink if it doesn't exist already
 	if [ ! -L "/home/mdadmn/jd2" ] ; then
 		ln -s "/tmp/jd2" "/home/mdadmn/jd2"
