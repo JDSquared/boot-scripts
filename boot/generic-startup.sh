@@ -53,3 +53,11 @@ if [ -d "/home/mdadmn/machinekit/configs/jd2" ]; then
 		ln -s "/tmp/jd2" "/home/mdadmn/jd2"
 	fi
 fi
+
+# Apply an update if one is available
+if [ -d "/home/mdadmn/update" ]; then
+	echo "generic-board-startup: Applying update"
+	chmod +x "/home/mdadmn/update/update.sh"
+	/bin/bash "/home/mdadmn/update/update.sh"
+	rm -rf "/home/mdadmn/update"
+fi
