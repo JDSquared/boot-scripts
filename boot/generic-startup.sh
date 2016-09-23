@@ -23,41 +23,21 @@ if [ -f /etc/ssh/ssh.regenerate ] ; then
 	fi
 fi
 
-#Resize drive when requested
-if [ -f /resizerootfs ] ; then
-	echo "generic-board-startup: resizerootfs"
-	drive=$(cat /resizerootfs)
-	if [ ! "x${drive}" = "x" ] ; then
-		if [ "x${drive}" = "x/dev/mmcblk0" ] || [ "x${drive}" = "x/dev/mmcblk1" ] ; then
-			resize2fs ${drive}p2 >/var/log/resize.log 2>&1 || true
-		else
-			resize2fs ${drive} >/var/log/resize.log 2>&1 || true
-		fi
-	fi
-	rm -rf /resizerootfs || true
-	sync
-fi
-
-	if [ -f "/opt/scripts/boot/${script}" ] ; then
-		echo "generic-board-startup: [startup script=/opt/scripts/boot/${script}]"
-		/bin/sh /opt/scripts/boot/${script}
-	fi
-fi
-
 # Copy the config directory to tmpfs
 if [ -d "/home/mdadmn/machinekit/configs/by_machine/jd2" ]; then
 	echo "generic-board-startup: setting up config directory"
 	cp -r "/home/mdadmn/machinekit/configs/by_machine/jd2" /tmp/
+	chown -R mdadmn:mdadmn /tmp/jd2 
 	# Create the symlink if it doesn't exist already
 	if [ ! -L "/home/mdadmn/jd2" ] ; then
 		ln -s "/tmp/jd2" "/home/mdadmn/jd2"
+		chown -h  mdadmn:mdadmn /home/mdadmn/jd2
 	fi
 fi
 
-# Apply an update if one is available
+# Check for an update folder
 if [ -d "/home/mdadmn/update" ]; then
-	echo "generic-board-startup: Applying update"
-	chmod +x "/home/mdadmn/update/update.sh"
-	/bin/bash "/home/mdadmn/update/update.sh"
-	rm -rf "/home/mdadmn/update"
+    chmod +x "/home/mdadmn/update/update.sh"
+    /bin/bash "/home/mdadmn/update/update.sh"
+    rm -rf "/home/mdadmn/update"
 fi
