@@ -39,5 +39,16 @@ fi
 if [ -d "/home/mdadmn/update" ]; then
     chmod +x "/home/mdadmn/update/update.sh"
     /bin/bash "/home/mdadmn/update/update.sh"
-    rm -rf "/home/mdadmn/update"
+    rm -rf "/home/mdadmn/update" || true
+	sync
 fi
+
+# Timectl setup
+if [ -f /home/mdadmn/timectl.regenerate ] ; then
+	echo "generic-board-startup: setting time parameters"
+	timedatectl set-ntp no
+	timedatectl set-timezone 'America/New_York'
+    rm -f "/home/mdadmn/timectl.regenerate" || true
+	sync
+fi
+
