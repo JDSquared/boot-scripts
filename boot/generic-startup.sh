@@ -44,11 +44,7 @@ if [ -d "/home/mdadmn/update" ]; then
 fi
 
 # Timectl setup
-if [ -f /home/mdadmn/timectl.regenerate ] ; then
-	echo "generic-board-startup: setting time parameters"
-	timedatectl set-ntp no
-	timedatectl set-timezone 'America/New_York'
-    rm -f "/home/mdadmn/timectl.regenerate" || true
-	sync
-fi
+echo "generic-board-startup: setting time parameters"
+timedatectl set-ntp no
+timedatectl set-timezone 'America/New_York'
 
