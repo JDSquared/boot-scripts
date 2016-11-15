@@ -23,11 +23,36 @@ if [ -f /etc/ssh/ssh.regenerate ] ; then
 	fi
 fi
 
+#Regenerate mkuuid
+if [ -f /home/mdadmn/mkuuid.regenerate ] ; then
+	echo "generic-board-startup: regenerating mkuuid"
+	UUID=`uuidgen`
+
+	# two machinekit.ini files on install, check for both
+	if [ -s /etc/linuxcnc/machinekit.ini ] ; then
+		sed -i "s|a42c8c6b-4025-4f83-ba28-dad21114744a|$UUID|" /etc/linuxcnc/machinekit.ini
+	fi
+
+	if [ -s /home/mdadmn/machinekit/etc/linuxcnc/machinekit.ini ] ; then
+		sed -i "s|a42c8c6b-4025-4f83-ba28-dad21114744a|$UUID|" /home/mdadmn/machinekit/etc/linuxcnc/machinekit.ini
+	fi
+
+	# Restart mkl if it is running
+	rm -f /home/mdadmn/mkuuid.regenerate || true
+	sync
+
+	if ! systemctl is-active mkl.service; then
+		systemctl stop mkl.service
+		sleep 1
+		systemctl start mkl.service
+	fi
+fi
+
 # Copy the config directory to tmpfs
 if [ -d "/home/mdadmn/machinekit/configs/by_machine/jd2" ]; then
 	echo "generic-board-startup: setting up config directory"
 	cp -r "/home/mdadmn/machinekit/configs/by_machine/jd2" /tmp/
-	chown -R mdadmn:mdadmn /tmp/jd2 
+	chown -R mdadmn:mdadmn /tmp/jd2
 	# Create the symlink if it doesn't exist already
 	if [ ! -L "/home/mdadmn/jd2" ] ; then
 		ln -s "/tmp/jd2" "/home/mdadmn/jd2"
@@ -47,4 +72,3 @@ fi
 echo "generic-board-startup: setting time parameters"
 timedatectl set-ntp no
 timedatectl set-timezone 'America/New_York'
-
