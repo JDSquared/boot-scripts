@@ -24,7 +24,7 @@ if [ -f /etc/ssh/ssh.regenerate ] ; then
 fi
 
 #Regenerate mkuuid
-if [ -f /home/mdadmn/mkuuid.regenerate ] ; then
+if [ -f /opt/mkuuid.regenerate ] ; then
 	echo "generic-board-startup: regenerating mkuuid"
 	UUID=`uuidgen`
 
@@ -38,7 +38,7 @@ if [ -f /home/mdadmn/mkuuid.regenerate ] ; then
 	fi
 
 	# Restart mkl if it is running
-	rm -f /home/mdadmn/mkuuid.regenerate || true
+	rm -f /opt/mkuuid.regenerate || true
 	sync
 
 	if ! systemctl is-active mkl.service; then
