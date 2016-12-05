@@ -23,7 +23,7 @@ if [ -f /etc/ssh/ssh.regenerate ] ; then
 	fi
 fi
 
-#Regenerate mkuuid
+#Regenerate mkuuid and turn on remote access
 if [ -f /etc/mkuuid.regenerate ] ; then
 	echo "generic-board-startup: regenerating mkuuid"
 	UUID=`uuidgen`
@@ -31,10 +31,13 @@ if [ -f /etc/mkuuid.regenerate ] ; then
 	# two machinekit.ini files on install, check for both
 	if [ -s /etc/linuxcnc/machinekit.ini ] ; then
 		sed -i "s|a42c8c6b-4025-4f83-ba28-dad21114744a|$UUID|" /etc/linuxcnc/machinekit.ini
+		sed -i "s|REMOTE=0|REMOTE=1|" /etc/linuxcnc/machinekit.ini
+
 	fi
 
 	if [ -s /home/mdadmn/machinekit/etc/linuxcnc/machinekit.ini ] ; then
 		sed -i "s|a42c8c6b-4025-4f83-ba28-dad21114744a|$UUID|" /home/mdadmn/machinekit/etc/linuxcnc/machinekit.ini
+		sed -i "s|REMOTE=0|REMOTE=1|" /home/mdadmn/machinekit/etc/linuxcnc/machinekit.ini
 	fi
 
 	# Restart mkl if it is running
